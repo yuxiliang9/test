@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo List</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="background-shape background-shape-left"></div>
+    <div class="background-shape background-shape-right"></div>
+
+    <main class="app-shell">
+      <section class="hero">
+        <p class="eyebrow">PUBLIC VIEW</p>
+        <h1>一个公开只读的待办清单。</h1>
+        <p class="hero-copy">
+          任何人都可以打开查看当前任务状态，但这个页面不提供新增、编辑或删除能力。
+        </p>
+      </section>
+
+      <section class="todo-card" aria-label="Todo 公开只读页">
+        <header class="card-header">
+          <div>
+            <p class="card-title">READ ONLY</p>
+            <h2>任务清单</h2>
+          </div>
+          <div class="task-badge" id="taskBadge">加载中</div>
+        </header>
+
+        <p class="readonly-note" id="viewStatus">正在加载任务数据...</p>
+
+        <div class="toolbar">
+          <div class="filters" id="filters" role="tablist" aria-label="任务筛选">
+            <button class="filter is-active" data-filter="all" type="button">全部</button>
+            <button class="filter" data-filter="active" type="button">进行中</button>
+            <button class="filter" data-filter="completed" type="button">已完成</button>
+          </div>
+          <button class="secondary-button" id="refreshButton" type="button">刷新数据</button>
+        </div>
+
+        <ul class="todo-list" id="todoList" aria-live="polite"></ul>
+
+        <footer class="card-footer">
+          <p id="taskSummary">正在加载...</p>
+        </footer>
+      </section>
+    </main>
+
+    <template id="todoItemTemplate">
+      <li class="todo-item">
+        <span class="todo-state" aria-hidden="true"></span>
+        <div class="todo-content">
+          <p class="todo-text"></p>
+          <span class="todo-meta"></span>
+        </div>
+        <span class="todo-label"></span>
+      </li>
+    </template>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

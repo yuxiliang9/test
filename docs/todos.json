@@ -1,0 +1,20 @@
+[
+  {
+    "id": "todo-1",
+    "text": "列出今天最重要的三件事",
+    "completed": false,
+    "createdAt": "2026-05-23T09:00:00+08:00"
+  },
+  {
+    "id": "todo-2",
+    "text": "完成 todo-list 页面交互",
+    "completed": false,
+    "createdAt": "2026-05-23T10:30:00+08:00"
+  },
+  {
+    "id": "todo-3",
+    "text": "检查移动端显示效果",
+    "completed": true,
+    "createdAt": "2026-05-23T11:15:00+08:00"
+  }
+]

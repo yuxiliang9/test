@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo 管理页</title>
+    <link rel="stylesheet" href="./admin.css" />
+  </head>
+  <body>
+    <div class="background-shape background-shape-left"></div>
+    <div class="background-shape background-shape-right"></div>
+
+    <main class="app-shell">
+      <section class="hero">
+        <p class="eyebrow">LOCAL EDITOR</p>
+        <h1>本地编辑待办，再发布到公网只读页。</h1>
+        <p class="hero-copy">
+          这个页面只给你本机使用。推荐通过 localhost 打开后直接保存到
+          `docs/todos.json`，再提交发布，外网用户就能看到更新后的内容。
+        </p>
+      </section>
+
+      <section class="todo-card" aria-label="Todo 管理页">
+        <header class="card-header">
+          <div>
+            <p class="card-title">LOCAL ADMIN</p>
+            <h2>任务管理</h2>
+          </div>
+          <div class="task-badge" id="taskBadge">0 项任务</div>
+        </header>
+
+        <p class="status-message" id="fileStatus">
+          当前使用浏览器本地草稿。建议通过 localhost 打开本页后绑定 docs/todos.json，这样可以直接保存。
+        </p>
+
+        <div class="editor-toolbar">
+          <button class="secondary-button" id="bindFileButton" type="button">绑定 docs/todos.json</button>
+          <button class="secondary-button" id="saveFileButton" type="button" disabled>直接保存</button>
+          <button class="secondary-button" id="importButton" type="button">导入 JSON</button>
+          <button class="secondary-button" id="exportButton" type="button">导出 JSON</button>
+          <button class="ghost-button" id="resetDraft" type="button">重置草稿</button>
+          <input class="sr-only" id="fileInput" type="file" accept="application/json,.json" />
+        </div>
+
+        <form class="todo-form" id="todoForm">
+          <label class="sr-only" for="todoInput">输入任务</label>
+          <input
+            id="todoInput"
+            name="todo"
+            type="text"
+            maxlength="120"
+            placeholder="添加一条任务，例如：完成首页设计稿"
+            autocomplete="off"
+          />
+          <button type="submit">添加任务</button>
+        </form>
+
+        <div class="toolbar">
+          <div class="filters" id="filters" role="tablist" aria-label="任务筛选">
+            <button class="filter is-active" data-filter="all" type="button">全部</button>
+            <button class="filter" data-filter="active" type="button">进行中</button>
+            <button class="filter" data-filter="completed" type="button">已完成</button>
+          </div>
+          <button class="ghost-button" id="clearCompleted" type="button">清除已完成</button>
+        </div>
+
+        <ul class="todo-list" id="todoList" aria-live="polite"></ul>
+
+        <footer class="card-footer">
+          <p id="taskSummary">还没有任务，先添加一条开始。</p>
+        </footer>
+      </section>
+    </main>
+
+    <template id="todoItemTemplate">
+      <li class="todo-item">
+        <label class="todo-check">
+          <input class="todo-toggle" type="checkbox" />
+          <span class="checkmark"></span>
+        </label>
+
+        <div class="todo-content">
+          <p class="todo-text"></p>
+          <span class="todo-meta"></span>
+        </div>
+
+        <button class="delete-button" type="button" aria-label="删除任务">删除</button>
+      </li>
+    </template>
+
+    <script src="./admin.js"></script>
+  </body>
+</html>
