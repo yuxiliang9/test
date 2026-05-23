@@ -1,0 +1,19 @@
+{
+  "id": "member-2",
+  "name": "小张",
+  "note": "独立任务清单，不受其他人影响。",
+  "todos": [
+    {
+      "id": "todo-2-1",
+      "text": "整理客户反馈",
+      "completed": false,
+      "createdAt": "2026-05-24T09:30:00+08:00"
+    },
+    {
+      "id": "todo-2-2",
+      "text": "补充日报",
+      "completed": false,
+      "createdAt": "2026-05-24T11:00:00+08:00"
+    }
+  ]
+}

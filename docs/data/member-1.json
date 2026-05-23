@@ -1,0 +1,19 @@
+{
+  "id": "member-1",
+  "name": "小余",
+  "note": "本机编辑这一组任务。",
+  "todos": [
+    {
+      "id": "todo-1-1",
+      "text": "整理今天最重要的三件事",
+      "completed": false,
+      "createdAt": "2026-05-24T09:00:00+08:00"
+    },
+    {
+      "id": "todo-1-2",
+      "text": "完成本周方案初稿",
+      "completed": true,
+      "createdAt": "2026-05-24T10:00:00+08:00"
+    }
+  ]
+}

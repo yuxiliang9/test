@@ -1,0 +1,19 @@
+{
+  "id": "member-3",
+  "name": "小李",
+  "note": "公开页会和其他两个人一起展示。",
+  "todos": [
+    {
+      "id": "todo-3-1",
+      "text": "检查上线页面",
+      "completed": true,
+      "createdAt": "2026-05-24T08:45:00+08:00"
+    },
+    {
+      "id": "todo-3-2",
+      "text": "更新数据说明",
+      "completed": false,
+      "createdAt": "2026-05-24T12:00:00+08:00"
+    }
+  ]
+}

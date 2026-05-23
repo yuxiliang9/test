@@ -9,21 +9,27 @@
 
 ## 三人模式
 
-`docs/todos.json` 现在是三个人的独立清单结构：
+现在是三个人的独立清单结构：
 
 - 每个人都有自己的 `name`
-- 每个人都有独立的 `todos`
+- 每个人都有独立的 JSON 文件
 - 三组任务会同时显示在公开页
-- 本地管理页一次只编辑当前选中的一个人，不会影响另外两个人
+- 每个人的本地管理页只编辑自己的文件，不需要选择名字
 
 ## 本地编辑
 
 推荐方式：
 
 1. 运行 `start-local-admin.ps1`
-2. 在浏览器打开 `http://localhost:4173/admin.html`
-3. 点击“绑定 docs/todos.json”
-4. 选择项目里的 `docs/todos.json`
+2. 每个人打开自己的页面：
+   - 小余：`http://localhost:4173/admin-member-1.html`
+   - 小张：`http://localhost:4173/admin-member-2.html`
+   - 小李：`http://localhost:4173/admin-member-3.html`
+3. 点击“绑定个人 JSON”
+4. 选择自己的文件：
+   - 小余：`docs/data/member-1.json`
+   - 小张：`docs/data/member-2.json`
+   - 小李：`docs/data/member-3.json`
 5. 在页面里新增、完成、删除任务
 6. 点击“直接保存”
 
@@ -44,7 +50,9 @@
 
 然后在浏览器里打开：
 
-- `http://localhost:4173/admin.html`
+- `http://localhost:4173/admin-member-1.html`
+- `http://localhost:4173/admin-member-2.html`
+- `http://localhost:4173/admin-member-3.html`
 
 ## 对外发布
 
@@ -65,7 +73,7 @@
 
 1. 打开本地 `admin.html`
 2. 修改任务
-3. 直接保存到 `docs/todos.json`
+3. 直接保存到自己的 `docs/data/member-*.json`
 4. 运行 `powershell -ExecutionPolicy Bypass -File .\publish.ps1`
 5. 如果已经配置了 GitHub 远端，它会自动推送
 

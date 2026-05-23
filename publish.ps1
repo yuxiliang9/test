@@ -15,7 +15,7 @@ if ([string]::IsNullOrWhiteSpace($Message)) {
   $Message = "update todo list " + (Get-Date -Format "yyyy-MM-dd HH:mm:ss")
 }
 
-git add admin.html admin.css admin.js README.md start-local-admin.ps1 publish.ps1 docs
+git add admin.html admin-member-1.html admin-member-2.html admin-member-3.html admin.css admin.js README.md start-local-admin.ps1 publish.ps1 docs
 git commit -m $Message
 
 $branch = git branch --show-current

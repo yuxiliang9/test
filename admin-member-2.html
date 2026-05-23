@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Todo 管理页</title>
+    <title>小张的 Todo 管理页</title>
     <link rel="stylesheet" href="./admin.css" />
   </head>
-  <body data-member-id="member-1" data-member-name="小余" data-member-file="member-1.json">
+  <body data-member-id="member-2" data-member-name="小张" data-member-file="member-2.json">
     <div class="background-shape background-shape-left"></div>
     <div class="background-shape background-shape-right"></div>
 
@@ -14,10 +14,7 @@
       <section class="hero">
         <p class="eyebrow">LOCAL EDITOR</p>
         <h1 id="pageTitle">个人任务管理</h1>
-        <p class="hero-copy" id="pageSubtitle">
-          这个页面只给你本机使用。推荐通过 localhost 打开后直接保存到
-          个人 JSON 文件，再提交发布，外网用户就能看到更新后的内容。
-        </p>
+        <p class="hero-copy" id="pageSubtitle"></p>
       </section>
 
       <section class="todo-card" aria-label="Todo 管理页">
@@ -34,7 +31,7 @@
         </p>
 
         <div class="editor-toolbar">
-          <button class="secondary-button" id="bindFileButton" type="button">绑定 docs/todos.json</button>
+          <button class="secondary-button" id="bindFileButton" type="button">绑定个人 JSON</button>
           <button class="secondary-button" id="saveFileButton" type="button" disabled>直接保存</button>
           <button class="secondary-button" id="importButton" type="button">导入 JSON</button>
           <button class="secondary-button" id="exportButton" type="button">导出 JSON</button>
@@ -44,24 +41,10 @@
 
         <div class="member-panel">
           <label class="field-label" for="ownerNameInput">显示名字</label>
-          <input
-            class="text-field"
-            id="ownerNameInput"
-            type="text"
-            maxlength="24"
-            placeholder="例如：小余"
-          />
-
+          <input class="text-field" id="ownerNameInput" type="text" maxlength="24" placeholder="例如：小张" />
           <label class="field-label" for="ownerNoteInput">备注说明</label>
-          <textarea
-            class="text-field text-area"
-            id="ownerNoteInput"
-            rows="3"
-            maxlength="120"
-            placeholder="例如：这是我的个人任务清单"
-          ></textarea>
-
-          <p class="field-hint" id="ownerHint">你可以给这一组任务写上自己的名字和备注。</p>
+          <textarea class="text-field text-area" id="ownerNoteInput" rows="3" maxlength="120" placeholder="例如：这是我的个人任务清单"></textarea>
+          <p class="field-hint" id="ownerHint">这里会显示在公开总览页中。</p>
         </div>
 
         <div class="task-count-bar">
@@ -70,14 +53,7 @@
 
         <form class="todo-form" id="todoForm">
           <label class="sr-only" for="todoInput">输入任务</label>
-          <input
-            id="todoInput"
-            name="todo"
-            type="text"
-            maxlength="120"
-            placeholder="添加一条任务，例如：完成首页设计稿"
-            autocomplete="off"
-          />
+          <input id="todoInput" name="todo" type="text" maxlength="120" placeholder="添加一条任务，例如：整理客户反馈" autocomplete="off" />
           <button type="submit">添加任务</button>
         </form>
 
@@ -104,12 +80,10 @@
           <input class="todo-toggle" type="checkbox" />
           <span class="checkmark"></span>
         </label>
-
         <div class="todo-content">
           <p class="todo-text"></p>
           <span class="todo-meta"></span>
         </div>
-
         <button class="delete-button" type="button" aria-label="删除任务">删除</button>
       </li>
     </template>
