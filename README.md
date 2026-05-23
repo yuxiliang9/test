@@ -22,14 +22,14 @@
 
 1. 运行 `start-local-admin.ps1`
 2. 每个人打开自己的页面：
-   - 小余：`http://localhost:4173/admin-member-1.html`
-   - 小张：`http://localhost:4173/admin-member-2.html`
-   - 小李：`http://localhost:4173/admin-member-3.html`
+   - 小张：`http://localhost:4173/admin-member-1.html`
+   - 小肖：`http://localhost:4173/admin-member-2.html`
+   - 小林：`http://localhost:4173/admin-member-3.html`
 3. 点击“绑定个人 JSON”
 4. 选择自己的文件：
-   - 小余：`docs/data/member-1.json`
-   - 小张：`docs/data/member-2.json`
-   - 小李：`docs/data/member-3.json`
+   - 小张：`docs/data/member-1.json`
+   - 小肖：`docs/data/member-2.json`
+   - 小林：`docs/data/member-3.json`
 5. 在页面里新增、完成、删除任务
 6. 点击“直接保存”
 

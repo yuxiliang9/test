@@ -1,15 +1,15 @@
 :root {
-  --card: rgba(255, 250, 244, 0.8);
-  --card-border: rgba(109, 78, 55, 0.15);
-  --text: #2a211b;
-  --muted: #7d6959;
-  --accent: #c35f3d;
-  --accent-strong: #9f4729;
+  --card: rgba(255, 250, 244, 0.86);
+  --card-border: rgba(68, 84, 106, 0.16);
+  --text: #1f2933;
+  --muted: #64748b;
+  --accent: #0f766e;
+  --accent-strong: #115e59;
   --success: #2f7d60;
   --success-soft: rgba(47, 125, 96, 0.12);
-  --shadow: 0 24px 60px rgba(85, 48, 29, 0.12);
-  --radius-xl: 28px;
-  --radius-lg: 18px;
+  --shadow: 0 24px 60px rgba(36, 54, 70, 0.12);
+  --radius-xl: 16px;
+  --radius-lg: 10px;
 }
 
 * {
@@ -23,74 +23,42 @@ body {
   font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
   color: var(--text);
   background:
-    radial-gradient(circle at top left, rgba(255, 255, 255, 0.9), transparent 32%),
-    linear-gradient(135deg, #f8f2ea 0%, #efe3d4 50%, #f3ebe2 100%);
-}
-
-body {
-  position: relative;
-  overflow-x: hidden;
-}
-
-.background-shape {
-  position: fixed;
-  z-index: 0;
-  width: 24rem;
-  height: 24rem;
-  border-radius: 50%;
-  filter: blur(20px);
-  opacity: 0.45;
-  pointer-events: none;
-}
-
-.background-shape-left {
-  top: -8rem;
-  left: -6rem;
-  background: #f5c28c;
-}
-
-.background-shape-right {
-  right: -7rem;
-  bottom: -9rem;
-  background: #d19c87;
+    linear-gradient(120deg, rgba(15, 118, 110, 0.12), transparent 36%),
+    linear-gradient(135deg, #f8fafc 0%, #edf4f2 52%, #f4f0e8 100%);
 }
 
 .app-shell {
-  position: relative;
-  z-index: 1;
   width: min(100%, 1120px);
   margin: 0 auto;
-  padding: 64px 20px;
+  padding: 56px 20px;
   display: grid;
-  grid-template-columns: 1fr 1.1fr;
+  grid-template-columns: 0.8fr 1.2fr;
   gap: 32px;
-  align-items: center;
+  align-items: start;
 }
 
 .hero {
-  padding: 24px 12px;
-  animation: slide-up 0.7s ease;
+  padding: 12px 0;
 }
 
 .eyebrow {
   margin: 0 0 14px;
   color: var(--accent-strong);
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   font-size: 0.78rem;
   font-weight: 700;
 }
 
 .hero h1 {
   margin: 0;
-  font-size: clamp(2.5rem, 4vw, 4.6rem);
-  line-height: 0.98;
-  letter-spacing: -0.05em;
+  font-size: clamp(2.4rem, 3.4rem, 3.4rem);
+  line-height: 1.05;
 }
 
 .hero-copy {
-  max-width: 34rem;
-  margin: 22px 0 0;
+  max-width: 30rem;
+  margin: 20px 0 0;
   font-size: 1.05rem;
   line-height: 1.75;
   color: var(--muted);
@@ -103,12 +71,10 @@ body {
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow);
   padding: 24px;
-  animation: slide-up 0.85s ease;
 }
 
 .card-header,
-.toolbar,
-.card-footer {
+.toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -123,19 +89,19 @@ body {
 .card-title {
   margin: 0 0 6px;
   font-size: 0.82rem;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.12em;
   color: var(--muted);
 }
 
 .card-header h2 {
   margin: 0;
-  font-size: 1.85rem;
+  font-size: 1.65rem;
 }
 
 .task-badge {
   padding: 10px 14px;
   border-radius: 999px;
-  background: rgba(195, 95, 61, 0.12);
+  background: rgba(15, 118, 110, 0.12);
   color: var(--accent-strong);
   font-weight: 700;
 }
@@ -143,8 +109,8 @@ body {
 .readonly-note {
   margin: 0 0 18px;
   padding: 14px 16px;
-  border-radius: 16px;
-  background: rgba(42, 33, 27, 0.05);
+  border-radius: var(--radius-lg);
+  background: rgba(31, 41, 51, 0.05);
   color: var(--muted);
   line-height: 1.6;
 }
@@ -153,38 +119,45 @@ body {
   margin-bottom: 18px;
 }
 
+.member-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.member-tab,
 .secondary-button {
   border: 0;
   cursor: pointer;
   font: inherit;
   padding: 10px 14px;
   border-radius: 999px;
-  background: rgba(109, 78, 55, 0.08);
+  background: rgba(31, 41, 51, 0.08);
   color: var(--muted);
   transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
+.member-tab.is-active {
+  background: var(--text);
+  color: #fff;
+}
+
 .secondary-button {
-  background: rgba(195, 95, 61, 0.12);
+  background: rgba(15, 118, 110, 0.12);
   color: var(--accent-strong);
   font-weight: 700;
 }
 
+.member-tab:hover,
 .secondary-button:hover {
   transform: translateY(-1px);
 }
 
-.board-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-}
-
 .member-board {
   padding: 18px;
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.58);
-  border: 1px solid rgba(109, 78, 55, 0.1);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.66);
+  border: 1px solid rgba(68, 84, 106, 0.12);
 }
 
 .member-header {
@@ -193,7 +166,7 @@ body {
 
 .member-name {
   margin: 0 0 8px;
-  font-size: 1.3rem;
+  font-size: 1.35rem;
 }
 
 .member-note,
@@ -223,17 +196,16 @@ body {
   gap: 14px;
   align-items: center;
   padding: 16px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.68);
-  border: 1px solid rgba(109, 78, 55, 0.08);
-  animation: fade-in 0.35s ease;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(68, 84, 106, 0.1);
 }
 
 .todo-state {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: rgba(109, 78, 55, 0.18);
+  background: rgba(68, 84, 106, 0.18);
 }
 
 .todo-item.is-completed .todo-state {
@@ -258,14 +230,14 @@ body {
 }
 
 .todo-item.is-completed .todo-text {
-  color: #9c8a7a;
+  color: #8792a2;
   text-decoration: line-through;
 }
 
 .todo-label {
   padding: 8px 12px;
   border-radius: 999px;
-  background: rgba(109, 78, 55, 0.08);
+  background: rgba(68, 84, 106, 0.08);
   color: var(--muted);
   font-size: 0.88rem;
 }
@@ -281,50 +253,15 @@ body {
   text-align: center;
   min-height: 220px;
   padding: 24px;
-  border-radius: 20px;
-  border: 1px dashed rgba(109, 78, 55, 0.18);
+  border-radius: var(--radius-lg);
+  border: 1px dashed rgba(68, 84, 106, 0.18);
   color: var(--muted);
-}
-
-.card-footer {
-  margin-top: 18px;
-  color: var(--muted);
-}
-
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 @media (max-width: 920px) {
   .app-shell {
     grid-template-columns: 1fr;
     padding: 42px 16px;
-  }
-
-  .hero {
-    padding: 0 4px;
-  }
-
-  .board-grid {
-    grid-template-columns: 1fr;
   }
 }
 

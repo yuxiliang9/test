@@ -194,7 +194,7 @@ resetDraftButton.addEventListener("click", () => {
 function readPageConfig() {
   const { dataset } = document.body;
   const id = dataset.memberId || "member-1";
-  const defaultName = dataset.memberName || "小余";
+  const defaultName = dataset.memberName || "小张";
   const fileName = dataset.memberFile || `${id}.json`;
 
   return {
