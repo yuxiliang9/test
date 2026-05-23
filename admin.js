@@ -1,4 +1,4 @@
-const STORAGE_KEY = "codex-todo-admin-draft-v2";
+const STORAGE_KEY = "codex-todo-admin-draft-v3";
 
 const form = document.querySelector("#todoForm");
 const input = document.querySelector("#todoInput");
@@ -15,11 +15,17 @@ const exportButton = document.querySelector("#exportButton");
 const resetDraftButton = document.querySelector("#resetDraft");
 const fileInput = document.querySelector("#fileInput");
 const fileStatus = document.querySelector("#fileStatus");
+const ownerSelect = document.querySelector("#ownerSelect");
+const ownerNameInput = document.querySelector("#ownerNameInput");
+const ownerNoteInput = document.querySelector("#ownerNoteInput");
+const ownerHint = document.querySelector("#ownerHint");
 
 let currentFilter = "all";
-let todos = loadDraft();
 let fileHandle = null;
+let board = loadDraft();
+let currentOwnerId = board.members[0]?.id ?? "member-1";
 
+hydrateOwnerOptions();
 render();
 updateSaveCapability();
 
@@ -32,11 +38,38 @@ form.addEventListener("submit", (event) => {
     return;
   }
 
-  todos.unshift(createTodo(text));
+  updateCurrentMember((member) => {
+    member.todos.unshift(createTodo(text));
+  });
+
   persistDraft();
   render();
   form.reset();
   input.focus();
+});
+
+ownerSelect.addEventListener("change", () => {
+  currentOwnerId = ownerSelect.value;
+  render();
+});
+
+ownerNameInput.addEventListener("input", () => {
+  updateCurrentMember((member) => {
+    member.name = ownerNameInput.value.trim() || member.name;
+  });
+
+  persistDraft();
+  hydrateOwnerOptions();
+  render();
+});
+
+ownerNoteInput.addEventListener("input", () => {
+  updateCurrentMember((member) => {
+    member.note = ownerNoteInput.value.trim();
+  });
+
+  persistDraft();
+  render();
 });
 
 filterGroup.addEventListener("click", (event) => {
@@ -50,7 +83,10 @@ filterGroup.addEventListener("click", (event) => {
 });
 
 clearCompletedButton.addEventListener("click", () => {
-  todos = todos.filter((todo) => !todo.completed);
+  updateCurrentMember((member) => {
+    member.todos = member.todos.filter((todo) => !todo.completed);
+  });
+
   persistDraft();
   render();
 });
@@ -67,9 +103,12 @@ list.addEventListener("change", (event) => {
   }
 
   const { id } = item.dataset;
-  todos = todos.map((todo) =>
-    todo.id === id ? { ...todo, completed: toggle.checked } : todo,
-  );
+
+  updateCurrentMember((member) => {
+    member.todos = member.todos.map((todo) =>
+      todo.id === id ? { ...todo, completed: toggle.checked } : todo,
+    );
+  });
 
   persistDraft();
   render();
@@ -87,7 +126,11 @@ list.addEventListener("click", (event) => {
   }
 
   const { id } = item.dataset;
-  todos = todos.filter((todo) => todo.id !== id);
+
+  updateCurrentMember((member) => {
+    member.todos = member.todos.filter((todo) => todo.id !== id);
+  });
+
   persistDraft();
   render();
 });
@@ -142,20 +185,21 @@ fileInput.addEventListener("change", async (event) => {
 
   try {
     const text = await file.text();
-    const parsed = normalizeTodos(JSON.parse(text));
-    todos = parsed;
+    board = normalizeBoard(JSON.parse(text));
+    currentOwnerId = board.members[0]?.id ?? "member-1";
     persistDraft();
+    hydrateOwnerOptions();
     render();
     updateStatus(`已导入 ${file.name}。如已绑定 docs/todos.json，可直接点击“直接保存”。`);
   } catch {
-    updateStatus("导入失败。请选择结构正确的 todos.json 文件。");
+    updateStatus("导入失败。请选择结构正确的多人 todos.json 文件。");
   } finally {
     fileInput.value = "";
   }
 });
 
 exportButton.addEventListener("click", () => {
-  const payload = JSON.stringify(todos, null, 2);
+  const payload = JSON.stringify(board, null, 2);
   const blob = new Blob([payload], { type: "application/json;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -167,36 +211,88 @@ exportButton.addEventListener("click", () => {
 });
 
 resetDraftButton.addEventListener("click", () => {
-  todos = seedTodos();
+  board = seedBoard();
+  currentOwnerId = board.members[0].id;
   persistDraft();
+  hydrateOwnerOptions();
   render();
-  updateStatus("已重置为默认草稿。");
+  updateStatus("已重置为默认三人草稿。");
 });
 
 function loadDraft() {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) {
-      return seedTodos();
+      return seedBoard();
     }
 
-    return normalizeTodos(JSON.parse(stored));
+    return normalizeBoard(JSON.parse(stored));
   } catch {
-    return seedTodos();
+    return seedBoard();
   }
 }
 
 function persistDraft() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(board));
+}
+
+function seedBoard() {
+  return {
+    members: [
+      {
+        id: "member-1",
+        name: "小余",
+        note: "本机编辑这一组任务。",
+        todos: [
+          createSeedTodo("整理今天最重要的三件事", false, "2026-05-24T09:00:00+08:00"),
+          createSeedTodo("完成本周方案初稿", true, "2026-05-24T10:00:00+08:00"),
+        ],
+      },
+      {
+        id: "member-2",
+        name: "小张",
+        note: "独立任务清单，不受其他人影响。",
+        todos: [
+          createSeedTodo("整理客户反馈", false, "2026-05-24T09:30:00+08:00"),
+          createSeedTodo("补充日报", false, "2026-05-24T11:00:00+08:00"),
+        ],
+      },
+      {
+        id: "member-3",
+        name: "小李",
+        note: "公开页会和其他两个人一起展示。",
+        todos: [
+          createSeedTodo("检查上线页面", true, "2026-05-24T08:45:00+08:00"),
+          createSeedTodo("更新数据说明", false, "2026-05-24T12:00:00+08:00"),
+        ],
+      },
+    ],
+  };
+}
+
+function normalizeBoard(value) {
+  const members = Array.isArray(value?.members) ? value.members : null;
+  if (!members || members.length !== 3) {
+    throw new Error("Invalid board");
+  }
+
+  return {
+    members: members.map((member, index) => ({
+      id: typeof member.id === "string" && member.id ? member.id : `member-${index + 1}`,
+      name: typeof member.name === "string" && member.name ? member.name : `成员 ${index + 1}`,
+      note: typeof member.note === "string" ? member.note : "",
+      todos: normalizeTodos(member.todos),
+    })),
+  };
 }
 
 function normalizeTodos(value) {
   if (!Array.isArray(value)) {
-    throw new Error("Invalid todos");
+    return [];
   }
 
   return value.map((todo, index) => ({
-    id: typeof todo.id === "string" && todo.id ? todo.id : `todo-${index + 1}`,
+    id: typeof todo.id === "string" && todo.id ? todo.id : `todo-${index + 1}-${Date.now()}`,
     text: typeof todo.text === "string" ? todo.text : "",
     completed: Boolean(todo.completed),
     createdAt:
@@ -204,29 +300,6 @@ function normalizeTodos(value) {
         ? todo.createdAt
         : new Date().toISOString(),
   }));
-}
-
-function seedTodos() {
-  return [
-    {
-      id: "todo-1",
-      text: "列出今天最重要的三件事",
-      completed: false,
-      createdAt: "2026-05-23T09:00:00+08:00",
-    },
-    {
-      id: "todo-2",
-      text: "完成 todo-list 页面交互",
-      completed: false,
-      createdAt: "2026-05-23T10:30:00+08:00",
-    },
-    {
-      id: "todo-3",
-      text: "检查移动端显示效果",
-      completed: true,
-      createdAt: "2026-05-23T11:15:00+08:00",
-    },
-  ];
 }
 
 function createTodo(text) {
@@ -238,28 +311,78 @@ function createTodo(text) {
   };
 }
 
-function getVisibleTodos() {
+function createSeedTodo(text, completed, createdAt) {
+  return {
+    id: crypto.randomUUID(),
+    text,
+    completed,
+    createdAt,
+  };
+}
+
+function getCurrentMember() {
+  return board.members.find((member) => member.id === currentOwnerId) ?? board.members[0];
+}
+
+function updateCurrentMember(updater) {
+  board.members = board.members.map((member) => {
+    if (member.id !== currentOwnerId) {
+      return member;
+    }
+
+    const nextMember = {
+      ...member,
+      todos: [...member.todos],
+    };
+
+    updater(nextMember);
+    return nextMember;
+  });
+}
+
+function hydrateOwnerOptions() {
+  const currentValue = currentOwnerId;
+  ownerSelect.innerHTML = "";
+
+  board.members.forEach((member) => {
+    const option = document.createElement("option");
+    option.value = member.id;
+    option.textContent = member.name;
+    ownerSelect.appendChild(option);
+  });
+
+  ownerSelect.value = board.members.some((member) => member.id === currentValue)
+    ? currentValue
+    : board.members[0].id;
+}
+
+function getVisibleTodos(member) {
   if (currentFilter === "active") {
-    return todos.filter((todo) => !todo.completed);
+    return member.todos.filter((todo) => !todo.completed);
   }
 
   if (currentFilter === "completed") {
-    return todos.filter((todo) => todo.completed);
+    return member.todos.filter((todo) => todo.completed);
   }
 
-  return todos;
+  return member.todos;
 }
 
 function render() {
-  const visibleTodos = getVisibleTodos();
-  const activeCount = todos.filter((todo) => !todo.completed).length;
-  const completedCount = todos.length - activeCount;
+  const member = getCurrentMember();
+  const visibleTodos = getVisibleTodos(member);
+  const activeCount = member.todos.filter((todo) => !todo.completed).length;
+  const completedCount = member.todos.length - activeCount;
 
-  badge.textContent = `${todos.length} 项任务`;
+  badge.textContent = `${member.todos.length} 项任务`;
   summary.textContent =
-    todos.length === 0
+    member.todos.length === 0
       ? "还没有任务，先添加一条开始。"
       : `剩余 ${activeCount} 项，已完成 ${completedCount} 项。`;
+
+  ownerNameInput.value = member.name;
+  ownerNoteInput.value = member.note;
+  ownerHint.textContent = member.note || "你可以给这一组任务写上自己的名字和备注。";
 
   [...filterGroup.querySelectorAll(".filter")].forEach((button) => {
     button.classList.toggle("is-active", button.dataset.filter === currentFilter);
@@ -327,7 +450,7 @@ function supportsDirectSave() {
 async function saveToBoundFile() {
   try {
     const writable = await fileHandle.createWritable();
-    await writable.write(JSON.stringify(todos, null, 2));
+    await writable.write(JSON.stringify(board, null, 2));
     await writable.close();
     updateStatus("已直接保存到绑定文件。现在只需要提交并推送到 GitHub。");
   } catch {

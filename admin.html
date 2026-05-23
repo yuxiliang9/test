@@ -42,6 +42,31 @@
           <input class="sr-only" id="fileInput" type="file" accept="application/json,.json" />
         </div>
 
+        <div class="member-panel">
+          <label class="field-label" for="ownerSelect">当前编辑的人</label>
+          <select class="text-field" id="ownerSelect"></select>
+
+          <label class="field-label" for="ownerNameInput">显示名字</label>
+          <input
+            class="text-field"
+            id="ownerNameInput"
+            type="text"
+            maxlength="24"
+            placeholder="例如：小余"
+          />
+
+          <label class="field-label" for="ownerNoteInput">备注说明</label>
+          <textarea
+            class="text-field text-area"
+            id="ownerNoteInput"
+            rows="3"
+            maxlength="120"
+            placeholder="例如：这是我的个人任务清单"
+          ></textarea>
+
+          <p class="field-hint" id="ownerHint">你可以给这一组任务写上自己的名字和备注。</p>
+        </div>
+
         <form class="todo-form" id="todoForm">
           <label class="sr-only" for="todoInput">输入任务</label>
           <input

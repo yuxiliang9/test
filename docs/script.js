@@ -1,35 +1,21 @@
-const list = document.querySelector("#todoList");
-const summary = document.querySelector("#taskSummary");
-const badge = document.querySelector("#taskBadge");
-const filterGroup = document.querySelector("#filters");
-const refreshButton = document.querySelector("#refreshButton");
-const template = document.querySelector("#todoItemTemplate");
+const boardContainer = document.querySelector("#boardContainer");
 const viewStatus = document.querySelector("#viewStatus");
+const refreshButton = document.querySelector("#refreshButton");
+const template = document.querySelector("#memberBoardTemplate");
 
-let currentFilter = "all";
-let todos = [];
+let board = { members: [] };
 
 renderLoadingState();
-loadTodos();
-
-filterGroup.addEventListener("click", (event) => {
-  const button = event.target.closest(".filter");
-  if (!button) {
-    return;
-  }
-
-  currentFilter = button.dataset.filter;
-  render();
-});
+loadBoard();
 
 refreshButton.addEventListener("click", () => {
-  loadTodos();
+  loadBoard();
 });
 
-async function loadTodos() {
+async function loadBoard() {
   refreshButton.disabled = true;
   refreshButton.textContent = "刷新中...";
-  viewStatus.textContent = "正在加载任务数据...";
+  viewStatus.textContent = "正在加载三个人的任务数据...";
 
   try {
     const response = await fetch("./todos.json", { cache: "no-store" });
@@ -38,11 +24,11 @@ async function loadTodos() {
     }
 
     const data = await response.json();
-    todos = normalizeTodos(data);
+    board = normalizeBoard(data);
     viewStatus.textContent = "公开只读页已同步最新任务数据。";
     render();
   } catch {
-    todos = [];
+    board = { members: [] };
     renderErrorState();
   } finally {
     refreshButton.disabled = false;
@@ -50,97 +36,103 @@ async function loadTodos() {
   }
 }
 
-function normalizeTodos(value) {
-  if (!Array.isArray(value)) {
-    throw new Error("Invalid todos");
+function normalizeBoard(value) {
+  const members = Array.isArray(value?.members) ? value.members : null;
+  if (!members) {
+    throw new Error("Invalid board");
   }
 
-  return value.map((todo, index) => ({
-    id: typeof todo.id === "string" && todo.id ? todo.id : `todo-${index + 1}`,
-    text: typeof todo.text === "string" ? todo.text : "",
-    completed: Boolean(todo.completed),
-    createdAt:
-      typeof todo.createdAt === "string" && todo.createdAt
-        ? todo.createdAt
-        : new Date().toISOString(),
-  }));
-}
-
-function getVisibleTodos() {
-  if (currentFilter === "active") {
-    return todos.filter((todo) => !todo.completed);
-  }
-
-  if (currentFilter === "completed") {
-    return todos.filter((todo) => todo.completed);
-  }
-
-  return todos;
+  return {
+    members: members.map((member, index) => ({
+      id: typeof member.id === "string" && member.id ? member.id : `member-${index + 1}`,
+      name: typeof member.name === "string" && member.name ? member.name : `成员 ${index + 1}`,
+      note: typeof member.note === "string" ? member.note : "",
+      todos: Array.isArray(member.todos)
+        ? member.todos.map((todo, todoIndex) => ({
+            id: typeof todo.id === "string" && todo.id ? todo.id : `todo-${index + 1}-${todoIndex + 1}`,
+            text: typeof todo.text === "string" ? todo.text : "",
+            completed: Boolean(todo.completed),
+            createdAt:
+              typeof todo.createdAt === "string" && todo.createdAt
+                ? todo.createdAt
+                : new Date().toISOString(),
+          }))
+        : [],
+    })),
+  };
 }
 
 function render() {
-  const visibleTodos = getVisibleTodos();
-  const activeCount = todos.filter((todo) => !todo.completed).length;
-  const completedCount = todos.length - activeCount;
+  boardContainer.innerHTML = "";
 
-  badge.textContent = `${todos.length} 项任务`;
-  summary.textContent =
-    todos.length === 0
-      ? "当前没有公开任务。"
-      : `剩余 ${activeCount} 项，已完成 ${completedCount} 项。`;
-
-  [...filterGroup.querySelectorAll(".filter")].forEach((button) => {
-    button.classList.toggle("is-active", button.dataset.filter === currentFilter);
-  });
-
-  list.innerHTML = "";
-
-  if (visibleTodos.length === 0) {
-    const emptyState = document.createElement("li");
-    emptyState.className = "empty-state";
-    emptyState.textContent = "当前筛选下没有任务。";
-    list.appendChild(emptyState);
+  if (board.members.length === 0) {
+    renderEmptyState("当前没有公开任务数据。");
     return;
   }
 
-  visibleTodos.forEach((todo) => {
+  board.members.forEach((member) => {
     const fragment = template.content.cloneNode(true);
-    const item = fragment.querySelector(".todo-item");
-    const text = fragment.querySelector(".todo-text");
-    const meta = fragment.querySelector(".todo-meta");
-    const label = fragment.querySelector(".todo-label");
+    const name = fragment.querySelector(".member-name");
+    const note = fragment.querySelector(".member-note");
+    const stats = fragment.querySelector(".member-stats");
+    const list = fragment.querySelector(".member-list");
+    const activeCount = member.todos.filter((todo) => !todo.completed).length;
+    const completedCount = member.todos.length - activeCount;
 
-    item.dataset.id = todo.id;
-    item.classList.toggle("is-completed", todo.completed);
-    text.textContent = todo.text;
-    meta.textContent = formatMeta(todo);
-    label.textContent = todo.completed ? "已完成" : "进行中";
+    name.textContent = member.name;
+    note.textContent = member.note || "这是一组独立的个人清单。";
+    stats.textContent = `${member.todos.length} 项任务 · 剩余 ${activeCount} 项 · 已完成 ${completedCount} 项`;
 
-    list.appendChild(fragment);
+    if (member.todos.length === 0) {
+      const emptyItem = document.createElement("li");
+      emptyItem.className = "empty-state";
+      emptyItem.textContent = "当前没有任务。";
+      list.appendChild(emptyItem);
+    } else {
+      member.todos.forEach((todo) => {
+        const item = document.createElement("li");
+        item.className = "todo-item";
+        if (todo.completed) {
+          item.classList.add("is-completed");
+        }
+
+        item.innerHTML = `
+          <span class="todo-state" aria-hidden="true"></span>
+          <div class="todo-content">
+            <p class="todo-text"></p>
+            <span class="todo-meta"></span>
+          </div>
+          <span class="todo-label"></span>
+        `;
+
+        item.querySelector(".todo-text").textContent = todo.text;
+        item.querySelector(".todo-meta").textContent = formatMeta(todo);
+        item.querySelector(".todo-label").textContent = todo.completed ? "已完成" : "进行中";
+
+        list.appendChild(item);
+      });
+    }
+
+    boardContainer.appendChild(fragment);
   });
 }
 
 function renderLoadingState() {
-  badge.textContent = "加载中";
-  summary.textContent = "正在加载...";
-  list.innerHTML = "";
-
-  const emptyState = document.createElement("li");
-  emptyState.className = "empty-state";
-  emptyState.textContent = "正在加载任务数据...";
-  list.appendChild(emptyState);
+  boardContainer.innerHTML = "";
+  renderEmptyState("正在加载三个人的任务数据...");
 }
 
 function renderErrorState() {
-  badge.textContent = "加载失败";
-  summary.textContent = "无法读取 todos.json。";
   viewStatus.textContent = "读取失败。请确认部署时包含 docs/todos.json。";
-  list.innerHTML = "";
+  boardContainer.innerHTML = "";
+  renderEmptyState("任务数据暂时不可用，请稍后刷新。");
+}
 
-  const emptyState = document.createElement("li");
-  emptyState.className = "empty-state";
-  emptyState.textContent = "任务数据暂时不可用，请稍后刷新。";
-  list.appendChild(emptyState);
+function renderEmptyState(message) {
+  const state = document.createElement("div");
+  state.className = "empty-state";
+  state.textContent = message;
+  boardContainer.appendChild(state);
 }
 
 function formatMeta(todo) {

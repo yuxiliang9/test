@@ -154,6 +154,43 @@ body {
   margin-bottom: 18px;
 }
 
+.member-panel {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.56);
+  border: 1px solid rgba(109, 78, 55, 0.1);
+}
+
+.field-label {
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.text-field {
+  width: 100%;
+  border: 1px solid rgba(109, 78, 55, 0.18);
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 14px;
+  padding: 12px 14px;
+  font: inherit;
+  color: var(--text);
+}
+
+.text-area {
+  resize: vertical;
+  min-height: 84px;
+}
+
+.field-hint {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 .todo-form {
   display: grid;
   grid-template-columns: 1fr auto;

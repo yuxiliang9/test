@@ -13,9 +13,9 @@
     <main class="app-shell">
       <section class="hero">
         <p class="eyebrow">PUBLIC VIEW</p>
-        <h1>一个公开只读的待办清单。</h1>
+        <h1>三个人的独立待办清单，集中展示在一个页面里。</h1>
         <p class="hero-copy">
-          任何人都可以打开查看当前任务状态，但这个页面不提供新增、编辑或删除能力。
+          每个人的任务彼此独立、互不影响。所有人都能查看总览，但这里只提供只读展示。
         </p>
       </section>
 
@@ -23,39 +23,33 @@
         <header class="card-header">
           <div>
             <p class="card-title">READ ONLY</p>
-            <h2>任务清单</h2>
+            <h2>三人任务总览</h2>
           </div>
-          <div class="task-badge" id="taskBadge">加载中</div>
+          <div class="task-badge">公开只读</div>
         </header>
 
-        <p class="readonly-note" id="viewStatus">正在加载任务数据...</p>
+        <p class="readonly-note" id="viewStatus">正在加载三个人的任务数据...</p>
 
         <div class="toolbar">
-          <div class="filters" id="filters" role="tablist" aria-label="任务筛选">
-            <button class="filter is-active" data-filter="all" type="button">全部</button>
-            <button class="filter" data-filter="active" type="button">进行中</button>
-            <button class="filter" data-filter="completed" type="button">已完成</button>
-          </div>
           <button class="secondary-button" id="refreshButton" type="button">刷新数据</button>
         </div>
 
-        <ul class="todo-list" id="todoList" aria-live="polite"></ul>
-
-        <footer class="card-footer">
-          <p id="taskSummary">正在加载...</p>
-        </footer>
+        <div class="board-grid" id="boardContainer" aria-live="polite"></div>
       </section>
     </main>
 
-    <template id="todoItemTemplate">
-      <li class="todo-item">
-        <span class="todo-state" aria-hidden="true"></span>
-        <div class="todo-content">
-          <p class="todo-text"></p>
-          <span class="todo-meta"></span>
-        </div>
-        <span class="todo-label"></span>
-      </li>
+    <template id="memberBoardTemplate">
+      <section class="member-board">
+        <header class="member-header">
+          <div>
+            <h3 class="member-name"></h3>
+            <p class="member-note"></p>
+          </div>
+          <p class="member-stats"></p>
+        </header>
+
+        <ul class="todo-list member-list"></ul>
+      </section>
     </template>
 
     <script src="./script.js"></script>

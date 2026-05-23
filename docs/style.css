@@ -153,13 +153,6 @@ body {
   margin-bottom: 18px;
 }
 
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.filter,
 .secondary-button {
   border: 0;
   cursor: pointer;
@@ -177,14 +170,42 @@ body {
   font-weight: 700;
 }
 
-.filter.is-active {
-  background: var(--text);
-  color: #fff7f2;
-}
-
-.filter:hover,
 .secondary-button:hover {
   transform: translateY(-1px);
+}
+
+.board-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.member-board {
+  padding: 18px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(109, 78, 55, 0.1);
+}
+
+.member-header {
+  margin-bottom: 14px;
+}
+
+.member-name {
+  margin: 0 0 8px;
+  font-size: 1.3rem;
+}
+
+.member-note,
+.member-stats {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.member-stats {
+  margin-top: 10px;
+  font-size: 0.92rem;
 }
 
 .todo-list {
@@ -301,12 +322,15 @@ body {
   .hero {
     padding: 0 4px;
   }
+
+  .board-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 640px) {
   .card-header,
-  .toolbar,
-  .card-footer {
+  .toolbar {
     align-items: flex-start;
     flex-direction: column;
   }
